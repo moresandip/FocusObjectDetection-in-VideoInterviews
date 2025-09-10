@@ -31,6 +31,7 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.addEventListener('loadedmetadata', () => {
+            setStreamError('');
             setIsStreaming(true);
             onVideoReady(videoRef.current!);
           });
@@ -41,19 +42,19 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
         
         switch (domError.name) {
           case 'NotAllowedError':
-            setStreamError('PERMISSION_DENIED');
+          setStreamError('CAMERA_ERROR');
             break;
           case 'NotFoundError':
-            setStreamError('No camera found. Please connect a camera device and refresh the page.');
+            setStreamError('CAMERA_NOT_FOUND');
             break;
           case 'NotReadableError':
-            setStreamError('Camera is already in use by another application. Please close other applications using the camera and refresh.');
+            setStreamError('CAMERA_IN_USE');
             break;
           case 'OverconstrainedError':
-            setStreamError('Camera does not support the requested video settings. Please try with a different camera.');
+            setStreamError('CAMERA_CONSTRAINTS');
             break;
           default:
-            setStreamError('Unable to access camera. Please check your camera settings and refresh the page.');
+            setStreamError('CAMERA_ERROR');
         }
       }
     };
@@ -176,11 +177,39 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
               </button>
             </div>
           </div>
+        ) : streamError === 'CAMERA_NOT_FOUND' ? (
+          <div className="aspect-video bg-gray-100 flex items-center justify-center">
+            <div className="text-center">
+              <CameraOff className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-600">No camera found. Please connect a camera device.</p>
+              <button
+                onClick={retryCamera}
+                disabled={isRetrying}
+                className="mt-3 bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 text-white px-4 py-2 rounded font-medium transition-colors"
+              >
+                {isRetrying ? 'Retrying...' : 'Try Again'}
+              </button>
+            </div>
+          </div>
+        ) : streamError === 'CAMERA_IN_USE' ? (
+          <div className="aspect-video bg-gray-100 flex items-center justify-center">
+            <div className="text-center">
+              <CameraOff className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-600">Camera is in use by another application.</p>
+              <button
+                onClick={retryCamera}
+                disabled={isRetrying}
+                className="mt-3 bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 text-white px-4 py-2 rounded font-medium transition-colors"
+              >
+                {isRetrying ? 'Retrying...' : 'Try Again'}
+              </button>
+            </div>
+          </div>
         ) : streamError ? (
           <div className="aspect-video bg-gray-100 flex items-center justify-center">
             <div className="text-center">
               <CameraOff className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600">{streamError}</p>
+              <p className="text-gray-600">Unable to access camera. Please check settings.</p>
               <button
                 onClick={retryCamera}
                 disabled={isRetrying}
@@ -203,7 +232,7 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
         {/* Detection overlay */}
         {detectionState.detectedObjects.length > 0 && (
           <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm">
-            Objects: {detectedState.detectedObjects.join(', ')}
+            Objects: {detectionState.detectedObjects.join(', ')}
           </div>
         )}
       </div>

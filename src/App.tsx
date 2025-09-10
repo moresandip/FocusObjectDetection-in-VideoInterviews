@@ -36,7 +36,20 @@ function App() {
   }, []);
 
   const handleStartInterview = useCallback(() => {
-    if (!videoElementRef.current || !candidateName.trim()) return;
+    if (!candidateName.trim()) {
+      alert('Please enter candidate name before starting the interview.');
+      return;
+    }
+    
+    if (!videoElementRef.current) {
+      alert('Please wait for camera to be ready before starting the interview.');
+      return;
+    }
+    
+    if (!isModelLoaded) {
+      alert('Please wait for AI models to load before starting the interview.');
+      return;
+    }
     
     const newSession: ProctoringSession = {
       candidateName: candidateName.trim(),
@@ -66,37 +79,37 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-gray-900 text-white shadow-lg">
+      <header className="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 text-white shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-600 p-2 rounded-lg">
-              <Shield className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl shadow-lg">
+              <Shield className="w-7 h-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">ProctorVision AI</h1>
-              <p className="text-gray-300 text-sm">AI-Powered Interview Monitoring System</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">ProctorVision AI</h1>
+              <p className="text-blue-200 text-sm font-medium">AI-Powered Interview Monitoring System</p>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-4 space-y-6">
+      <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Status Bar */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${isModelLoaded ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className="text-sm font-medium">
+                <div className={`w-4 h-4 rounded-full shadow-sm ${isModelLoaded ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                <span className="text-sm font-semibold text-gray-700">
                   AI Models: {isModelLoaded ? 'Ready' : 'Loading...'}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${isSessionActive ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                <span className="text-sm font-medium">
+                <div className={`w-4 h-4 rounded-full shadow-sm ${isSessionActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                <span className="text-sm font-semibold text-gray-700">
                   Session: {isSessionActive ? 'Active' : 'Inactive'}
                 </span>
               </div>
