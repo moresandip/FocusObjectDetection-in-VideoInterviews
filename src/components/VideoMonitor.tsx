@@ -42,7 +42,7 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
         
         switch (domError.name) {
           case 'NotAllowedError':
-          setStreamError('CAMERA_ERROR');
+            setStreamError('PERMISSION_DENIED');
             break;
           case 'NotFoundError':
             setStreamError('CAMERA_NOT_FOUND');
