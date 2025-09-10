@@ -149,11 +149,11 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
                   </li>
                   <li className="flex items-start">
                     <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-2 mt-0.5">2</span>
-                    Click it and select "Allow" for camera access
+                    Click it and select "Allow\" for camera access
                   </li>
                   <li className="flex items-start">
                     <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-2 mt-0.5">3</span>
-                    Click "Try Again" below
+                    Click "Try Again\" below
                   </li>
                 </ol>
               </div>
