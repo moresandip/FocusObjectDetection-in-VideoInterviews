@@ -40,7 +40,7 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
         console.error('Error accessing camera:', error);
         const domError = error as DOMException;
         
-        switch (domError.name) {
+        switch (domError?.name) {
           case 'NotAllowedError':
             setStreamError('PERMISSION_DENIED');
             break;
@@ -54,7 +54,7 @@ export const VideoMonitor: React.FC<VideoMonitorProps> = ({
             setStreamError('CAMERA_CONSTRAINTS');
             break;
           default:
-            setStreamError('CAMERA_ERROR');
+            setStreamError('Unable to access camera. Please check your camera settings.');
         }
       }
     };
